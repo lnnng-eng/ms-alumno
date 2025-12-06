@@ -70,7 +70,7 @@ class AlumnoService:
     def generar_pdf(id):
         alumno = AlumnoRepository.buscar_por_id(id)
         if not alumno or not alumno.facultad_id:
-            return None  # O manejar el error como prefieras
+            return None 
         facultad = FacultadRepository.buscar_por_id(alumno.facultad_id)
 
         buffer = io.BytesIO()
@@ -95,4 +95,5 @@ class AlumnoService:
         alumno = AlumnoRepository.borrar_por_id(id)
         if not alumno:
             return None
+
         return alumno
