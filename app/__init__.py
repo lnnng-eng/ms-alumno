@@ -28,5 +28,4 @@ def create_app() -> Flask:
     
     return app
 
-# Se crea la instancia de la aplicación aquí para que Gunicorn pueda encontrarla como 'app.app'.
 app = create_app()
