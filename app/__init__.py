@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from app.config import config
 from app.resources import init_routes
 from flask_sqlalchemy import SQLAlchemy
+from app.resources.alumno_resources import alumno_bp
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -21,6 +22,8 @@ def create_app() -> Flask:
     db.init_app(app)
     migrate.init_app(app,db)
     init_routes(app)
+
+    app.register_blueprint(alumno_bp)
 
     @app.shell_context_processor    
     def ctx():
