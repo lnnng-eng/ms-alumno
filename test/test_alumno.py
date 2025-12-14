@@ -30,7 +30,6 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(alumno.apellido, "Silva")
         self.assertEqual(alumno.nombre, "Abril")
         self.assertEqual(alumno.nro_documento, "12345678")
-        self.assertEqual(alumno.sexo, "F")
         self.assertEqual(alumno.nro_legajo, 1234)
         
 
@@ -89,10 +88,7 @@ class AppTestCase(unittest.TestCase):
         alumno.apellido = 'Silva'
         alumno.nombre = 'Abril'
         alumno.nro_documento = dni
-        alumno.fecha_nacimiento = '1990-01-01'
-        alumno.sexo = 'F'
         alumno.nro_legajo = legajo
-        alumno.fecha_ingreso = '2022-01-01'
         
         return alumno
 
