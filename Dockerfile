@@ -14,10 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     curl \
-    ca-certificates \ 
-    #htop \
-    #iputils-ping \
-    #&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/sysacad
@@ -48,5 +45,4 @@ CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:app"]
 #Migré de requirements.txt a uv con lockfile 
 #para asegurar builds reproducibles, eliminé 
 #dependencias innecesarias, dejé solo las requeridas 
-#para PostgreSQL, uso usuario no-root y cambie a Granian como servidor WSGI 
-#de producción porque tiene mejores benficios.
+#para PostgreSQL, uso usuario no-root .
