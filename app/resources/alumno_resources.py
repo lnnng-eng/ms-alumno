@@ -1,15 +1,11 @@
 from flask import Blueprint, jsonify, send_file
-from app.mapping.alumno_mapping import AlumnoMapper, AlumnoSchema
+from app.mapping.alumno_mapping import  AlumnoSchema
 from app.services.alumno_service import AlumnoService
-#from app.validators import validate_with
-#from app.models import Alumno
-#import logging
-#import io
 
-alumno_bp = Blueprint('alumno', __name__)
+alumno_bp = Blueprint('alumno', __name__,url_prefix='/alumno')
 
 #pdf
-@alumno_bp.route('/alumno/<int:id>/pdf', methods=['GET'])
+@alumno_bp.route('/<int:id>/pdf', methods=['GET'])
 def get_alumno_pdf(id):
     pdf_buffer = AlumnoService.generar_pdf(id)
     if not pdf_buffer:
@@ -23,7 +19,7 @@ def get_alumno_pdf(id):
     )
 
 #buscar
-@alumno_bp.route('/alumno/<int:id>', methods=['GET'])
+@alumno_bp.route('/<int:id>', methods=['GET'])
 def buscar_por_id(id):
     alumno= AlumnoService.buscar_por_id(id)
     if alumno is None:
@@ -31,9 +27,10 @@ def buscar_por_id(id):
     return AlumnoSchema().dump(alumno),200
 
 #listar 
-@alumno_bp.route('/alumno', methods=['GET'])
+@alumno_bp.route('/', methods=['GET'])
 def listar_alumnos():
     alumnos = AlumnoService.buscar_todos()
-    return AlumnoSchema().dump(alumnos, many=True),200
+    schema = AlumnoSchema(many=True)
+    return schema.dump(alumnos),200
 
 

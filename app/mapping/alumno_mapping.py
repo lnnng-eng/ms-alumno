@@ -8,7 +8,7 @@ class AlumnoSchema(Schema):
     nro_documento = fields.String()
     nro_legajo = fields.Integer()
     
-    
+#no @post_load, No logica solo mapping  
     
     
     

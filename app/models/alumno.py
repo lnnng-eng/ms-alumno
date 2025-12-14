@@ -1,10 +1,7 @@
 from dataclasses import dataclass
-from sqlalchemy import DateTime
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Integer, String
 from app import db
-from app.models.facultad import Facultad
-from app.models.documento import Documento
 
 @dataclass(init=False, repr=True, eq=True)
 class Alumno(db.Model):
@@ -14,13 +11,6 @@ class Alumno(db.Model):
     apellido: Mapped[str] = mapped_column(String(100), nullable=False)
     nombre: Mapped[str] = mapped_column(String(100), nullable=False)
     nro_documento: Mapped[str] = mapped_column(String(50), nullable=False)
-    fecha_nacimiento: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    sexo: Mapped[str] = mapped_column(String(10), nullable=False)
     nro_legajo: Mapped[int] = mapped_column(Integer, nullable=False)
-    fecha_ingreso: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
 
-    tipo_documento_id: Mapped[int] = mapped_column(ForeignKey("documentos.id"), nullable=False)
-    tipo_documento: Mapped["Documento"] = relationship("Documento", backref="alumnos")
-
-    facultad_id: Mapped[int] = mapped_column(ForeignKey("facultades.id"), nullable=True)
-    facultad: Mapped["Facultad"] = relationship("Facultad", backref="alumnos")
+#sin fechas y sin relaciones

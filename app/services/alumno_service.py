@@ -3,7 +3,7 @@ from app import db
 from app.repositories.alumno_repositorio import AlumnoRepository
 from reportlab.pdfgen import canvas
 import io
-import json
+
 
 class AlumnoService:
     """
