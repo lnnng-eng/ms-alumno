@@ -1,10 +1,7 @@
 from app.models import Alumno
 from app import db
 from app.repositories.alumno_repositorio import AlumnoRepository
-from app.models.facultad import Facultad
-from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from app.repositories.facultad_repositorio import FacultadRepository
 import io
 import json
 
