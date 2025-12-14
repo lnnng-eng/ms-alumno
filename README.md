@@ -41,7 +41,7 @@ Hay que estar en la carpeta base del proyecto 'ms-alumno', luego instalar la ima
     ```
     para obtener un listado de alumnos en formato JSON o buscar por ID.
 
-##Acceso al microservicio y endpoints
+#Acceso al microservicio y endpoints
 El microservicio está disponible vía Traefik en:
 ```
 https://alumnos.universidad.localhost
@@ -53,7 +53,7 @@ GET https://alumnos.universidad.localhost/api/v1/alumno/<id>
 ```
 Puedes probarlos con Postman o desde el navegador.
 
-## Patrones de Microservicio
+#Patrones de Microservicio
 
 - **Circuit Breaker:** Implementado a nivel de infraestructura con Traefik. Si el servicio presenta alta latencia, errores 5xx o problemas de red, Traefik corta el tráfico temporalmente para proteger el sistema.
 - **Retry:** Traefik reintenta automáticamente las peticiones fallidas hacia el microservicio, mejorando la resiliencia ante fallos transitorios.
