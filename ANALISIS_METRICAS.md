@@ -60,4 +60,4 @@ Se espera que, durante el pico de carga:
 - Usuarios concurrentes maximos: XX
 - p95 tiempo de respuesta: XXX ms
 - Tasa de errores: X %
-- Estado general: Aceptable / No aceptable 
+- Estado general: Aceptable / No aceptable ddddd
