@@ -1,36 +1,52 @@
 FROM python:3.10-slim
 
 ENV FLASK_CONTEXT=production
+ENV PYTHONDONTWRITEBYTECODE=1 
 ENV PYTHONUNBUFFERED=1
-ENV PATH=$PATH:/home/sysacad/.local/bin
+ENV PATH=$PATH:/home/sysacad/.venv/bin
+
 # Creamos un usuario no-root por seguridad y establecemos el directorio de trabajo
 RUN useradd --create-home --home-dir /home/sysacad sysacad
-# Actualizamos apt, instalamos solo las herramientas de runtime necesarias,
-# y limpiamos la caché en la misma capa para reducir el tamaño de la imagen.
-# No necesitamos 'build-essential' o 'libpq-dev' porque 'psycopg2-binary' ya viene precompilado.
+
+#Dependencias necesarias para psycopg2 / uv
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-dev \
+    build-essential \
+    libpq-dev \
     curl \
-    htop \
-    iputils-ping \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    ca-certificates \ 
+    #htop \
+    #iputils-ping \
+    #&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /home/sysacad
 
-# Copiamos primero el archivo de dependencias para aprovechar el cache de Docker
-COPY --chown=sysacad:sysacad ./requirements.txt ./requirements.txt
+RUN curl -fsSL https://astral.sh/uv/install.sh | sh \
+    && install -m 0755 /root/.local/bin/uv /usr/local/bin/uv
+
+    # Copiamos primero el archivo de dependencias para aprovechar el cache de Docker
+COPY pyproject.toml uv.lock ./
+
+#creamos el venv e instalamos dependencias versiones
+RUN uv sync --locked
+
+COPY app ./app 
+COPY app.py .
 
 # Cambiamos al usuario no-root ANTES de instalar dependencias
+RUN chown -R sysacad:sysacad /home/sysacad
 USER sysacad
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiamos el resto del código de la aplicación
-COPY --chown=sysacad:sysacad ./app ./app
-COPY --chown=sysacad:sysacad ./app.py .
+ENV VIRTUAL_ENV="/home/sysacad/.venv"
 
 EXPOSE 5000
 
-# Usamos Gunicorn como un servidor WSGI de producción para manejar alta concurrencia.
-# --bind 0.0.0.0:5000: Escucha en todas las interfaces de red dentro del contenedor.
-# --workers 4: Inicia 4 procesos para manejar peticiones en paralelo. Un buen punto de partida es (2 * CPU cores) + 1.
-# app:app: Le dice a Gunicorn que busque el objeto 'app' dentro del módulo 'app.py'.
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:app"]
+
+
+#Migré de requirements.txt a uv con lockfile 
+#para asegurar builds reproducibles, eliminé 
+#dependencias innecesarias, dejé solo las requeridas 
+#para PostgreSQL, uso usuario no-root y cambie a Granian como servidor WSGI 
+#de producción porque tiene mejores benficios.
