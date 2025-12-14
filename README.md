@@ -1,4 +1,4 @@
-# ms-alumno
+
 # Microservicio de Gestión de Alumnos
 
 ## Integrantes
@@ -25,7 +25,7 @@ Hay que estar en la carpeta base del proyecto 'ms-alumno', luego instalar la ima
     docker build -t gestion-alumnos:v1.0.0 .
     cd docker
     $env:COMPOSE_PROJECT_NAME="gestion-alumnos"; docker-compose up -d
-    ```
+```
 
 4. Ejecutar pruebas con spike_test.js
     Para ejecutar este archivo en js, solamente hay que estar en la terminal del proyecto y ejecutar:
@@ -42,15 +42,15 @@ Hay que estar en la carpeta base del proyecto 'ms-alumno', luego instalar la ima
     para obtener un listado de alumnos en formato JSON o buscar por ID.
 
 #Acceso al microservicio y endpoints
-El microservicio está disponible vía Traefik en:
-```
-https://alumnos.universidad.localhost
-```
-Los endpoints principales son:
-```
+    El microservicio está disponible vía Traefik en:
+    ```
+    https://alumnos.universidad.localhost
+    ```
+    Los endpoints principales son:
+    ```
 GET https://alumnos.universidad.localhost/api/v1/alumno?limit=100&offset=0
 GET https://alumnos.universidad.localhost/api/v1/alumno/<id>
-```
+    ```
 Puedes probarlos con Postman o desde el navegador.
 
 #Patrones de Microservicio
