@@ -1,37 +1,68 @@
-services:
-    alumnos-service:
-        image: gestion-alumnos:v1.0.0 
-        deploy:
-            replicas: 3
-        env_file:
-            - ../.env
-        environment:
-            - FLASK_CONTEXT=production
-            - HOST_DB=${HOST_DB}
-            - USER_DB=${USER_DB}
-            - PASSWORD_DB=${PASSWORD_DB}
-            - NAME_DB=${NAME_DB}            
-        networks:
-            mired:
-                aliases:
-                    - alumnos.universidad.localhost
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.alumnos-service.rule=Host(`alumnos.universidad.localhost`)"
-            - "traefik.http.routers.alumnos-service.tls=true"
-            - "traefik.http.services.alumnos-service.loadbalancer.server.port=5000"
-            
-            # Patron Circuit Breaker
-            - "traefik.http.middlewares.alumnos-service.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100"
-            - "traefik.http.middlewares.alumnos-service.circuitbreaker.expression=ResponseCodeRatio(500, 600, 0, 600) > 0.25"
-            - "traefik.http.middlewares.alumnos-service.circuitbreaker.expression=NetworkErrorRatio() > 0.5"
-            - "traefik.http.middlewares.alumnos-service.retry.attempts=4"
-            - "traefik.http.middlewares.alumnos-service.retry.initialinterval=100ms"            
-            - "traefik.docker.network=mired"
-networks:
-    mired:
-      external: true
+version: "3.9"
 
-#saque el build, el build se realiza en el pipeline, el compose solo despliega imagenes versionadas
-#saque el redis, porq el microservicio alumno no lo utiliza, mantenerlo viola YAGNI y agrega complejidad innecesaria
-# agregue env_file centraliza configuracion y facilita despliegue en distintos entornos
+services:
+  reverse-proxy:
+    image: traefik:v3.5
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"      # HTTP
+      - "8080:8080"  # Dashboard Traefik
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - mired
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${USER_DB}
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+      POSTGRES_DB: ${NAME_DB}
+    ports:
+      - "5433:5432"
+    networks:
+      - mired
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  alumnos-service:
+    build: 
+        context: .. 
+        dockerfile: Dockerfile
+    image: gestion-alumnos:v1.0.0
+    env_file:
+      - ../.env
+    environment:
+      - FLASK_CONTEXT=${FLASK_CONTEXT}
+      - HOST_DB=${HOST_DB}
+      - USER_DB=${USER_DB}
+      - PASSWORD_DB=${PASSWORD_DB}
+      - NAME_DB=${NAME_DB}
+    networks:
+      mired:
+        aliases:
+          - alumnos.universidad.localhost
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alumnos.rule=Host(`alumnos.universidad.localhost`)"
+      - "traefik.http.routers.alumnos.entrypoints.web.address=:80"
+      - "traefik.http.services.alumnos.loadbalancer.server.port=5000"
+    deploy:
+      replicas: 3
+
+networks:
+  mired:
+    external: true
+
+volumes:
+  postgres_data:
