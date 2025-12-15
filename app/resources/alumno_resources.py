@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, send_file
 from app.mapping.alumno_mapping import  AlumnoSchema
 from app.services.alumno_service import AlumnoService
 
-alumno_bp = Blueprint('alumno', __name__,url_prefix='/alumno')
+alumno_bp = Blueprint('alumno', __name__,url_prefix='/api/v1/alumno')
 
 #pdf
 @alumno_bp.route('/<int:id>/pdf', methods=['GET'])
