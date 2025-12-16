@@ -57,7 +57,16 @@ Se espera que, durante el pico de carga:
 -Los resultados obtenidos permitirán validar la correcta configuración del microservicio y su preparación para entornos productivos
 
 8. Resultados esperados
-- Usuarios concurrentes maximos: XX
-- p95 tiempo de respuesta: XXX ms
-- Tasa de errores: X %
-- Estado general: Aceptable / No aceptable ddddd
+Los siguientes valores son los objetivos de rendimiento establecidos para validar la estabilidad y la capacidad de escalabilidad de la arquitectura bajo una prueba de carga tipo Spike Test (con un pico de 200 Usuarios Virtuales).
+
+- Usuarios concurrentes maximos:   200 VUs
+- p95 tiempo de respuesta: < 500 ms
+- Tasa de errores: < 1%
+- Estado general: Aceptable  
+
+Nota Importante
+Debido a inconvenientes técnicos o de configuración con la herramienta de pruebas de carga k6 durante la fase de validación, no se pudieron obtener resultados empíricos (medidos) que validen el cumplimiento de estos umbrales.
+
+Por lo tanto, los valores de la tabla representan los objetivos de diseño que el microservicio debe alcanzar para considerar que su despliegue en contenedores es exitoso y estable.
+
+La arquitectura está configurada para cumplir estos objetivos, pero su validación final queda pendiente.
