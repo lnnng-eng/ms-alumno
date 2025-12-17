@@ -1,0 +1,30 @@
+# ====================================================================
+# ARCHIVO DE EJEMPLO DE VARIABLES DE ENTORNO (.env.example)
+#
+# Copia este archivo a .env y reemplaza los valores PLACEHOLDER
+# por las credenciales de tu entorno de desarrollo o producción.
+# ====================================================================
+
+
+# --- VARIABLES PARA EL SERVICIO DE BASE DE DATOS POSTGRES ---
+# Estas variables son utilizadas por el contenedor Docker de PostgreSQL
+# para su configuración inicial (definidas en docker-compose.yml)
+POSTGRES_USER=myuser_dev
+POSTGRES_PASSWORD=mysecretpassword
+POSTGRES_DB=gestion_alumnos_db
+
+
+# --- VARIABLES PARA LA APLICACIÓN FLASK/PYTHON ---
+# Estas variables son inyectadas en el contenedor del microservicio
+# para que la aplicación Flask se conecte a la base de datos.
+FLASK_CONTEXT=production
+HOST_DB=postgres         # El nombre del servicio DB en Docker Compose
+USER_DB=myuser_dev       # Debe coincidir con POSTGRES_USER
+PASSWORD_DB=mysecretpassword # Debe coincidir con POSTGRES_PASSWORD
+NAME_DB=gestion_alumnos_db # Debe coincidir con POSTGRES_DB
+PORT_DB=5432
+
+# URL de Conexión Completa (SQLAlchemy)
+# Formato: postgresql+psycopg2://USER:PASSWORD@HOST:PORT/DB_NAME
+# NOTA: Usar el nombre del servicio Docker (HOST_DB)
+SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://myuser_dev:mysecretpassword@postgres:5432/gestion_alumnos_db
