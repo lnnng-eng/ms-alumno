@@ -15,14 +15,14 @@
 ```bash
     git clone https://github.com/lnnng-eng/ms-alumno.git
     cd ms-alumno
-    ```
+```
 
 2. Activar el entorno
-    ´´bash
+``` powershell
     uv venv
     .venv\Scripts\activate
     uv sync
-
+```
 3. Contruir la imagen e iniciar servicios 
 Hay que estar en la carpeta base del proyecto 'ms-alumno', luego instalar la imagen y por ultimo levantar los servicios
 ```powershell
@@ -45,12 +45,12 @@ Este comando construye la imagen con el codigo mas recientem fuerza la recreacio
     ```
     para obtener un listado de alumnos en formato JSON, buscar por ID o generar el informe PDF.
 
-#Acceso al microservicio y endpoints
-    El microservicio está disponible vía Traefik en:
+##Acceso al microservicio y endpoints
+El microservicio está disponible vía Traefik en:
     ```
     http://localhost:8080/dashboard/
     ```
-    Los endpoints principales son:
+Los endpoints principales son:
     ```
 GET https://alumnos.universidad.localhost/api/v1/alumno
 GET https://alumnos.universidad.localhost/api/v1/alumno/<id>
